@@ -1,0 +1,46 @@
+$light: rgba(218, 237, 251, 1);
+$error: rgba(212, 66, 53, 1);
+$dark: rgba(89, 98, 85, 1);
+$secondary: rgba(10, 84, 255, 1);
+$primary: rgba(15, 26, 67, 1);
+$secondary-t: rgba(10, 84, 255, 0.75);
+$primary-t: rgba(15, 26, 67, 0.85);
+
+@keyframes rotate {
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg) scale(1);
+	}
+    50% {
+		transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+	}
+
+	100% {
+		transform: translate(-50%, -50%) rotate(360deg) scale(1);
+	}
+}
+
+#spinner {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 100;
+	width: 100%;
+	height: 100vh;
+	background-color: $primary-t;
+}
+
+#spinner > div {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 150px;
+	height: 150px;
+	border: 9px solid $secondary;
+	border-top: 9px solid $light;
+	border-radius: 50%;
+	background-color: transparent;
+
+	animation: 2000ms rotate linear infinite;
+
+	transform: translate(-50%, -50%);
+}

@@ -1,0 +1,1007 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Maximum Visibility Dive API",
+    "description": "The Maximum Visibility API is a recteational-technical dive planner, it can generate no-decompression dive tables or a decompression plan and gas consumption calculation per input in metric measurements. As an extension it can save past dives in a dive log and save the adjustable gas and conservativism settings in a user profile.",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "List of all countries."
+    },
+    {
+      "name": "plan",
+      "description": "Create dive tables and plans."
+    },
+    {
+      "name": "divelog",
+      "description": "List, create, update and delete dive logs."
+    },
+    {
+      "name": "divesite",
+      "description": "List, create, update and delete divesites."
+    },
+    {
+      "name": "settings",
+      "description": "List and edit user settings, create and delete breathing gas mixes."
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Returns JWT token if user is validated trough Oauth2 provider.",
+        "description": "Returns JWT token if user is validated trough Oauth2 provider.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_login_body"
+              },
+              "examples": {
+                "0": {
+                  "value": {
+                    "code": "{OAuth2 authorization code}",
+                    "provider": "{OAuth2 povider name}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/user/create": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Creates user with username if authorized trough JWT token.",
+        "description": "Creates user with username if authorized trough JWT token.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_create_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n           \"username\": \"{username}\"\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/plan/table": {
+      "post": {
+        "tags": [
+          "plan"
+        ],
+        "summary": "Returns custom no-decompression dive table per input data.",
+        "description": "Returns custom no-decompression dive table per input data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/plan_table_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n            \"maxDepth\": 40,\n            \"steps\": 3,\n            \"gas\": {\"o2\":0.32,\"he2\":0,\"n2\":0.68,\"diveMod\":33.7,\"decoMod\":40},\n            \"gradientFactor\": 1\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/plan/dive": {
+      "post": {
+        "tags": [
+          "plan"
+        ],
+        "summary": "Returns custom decompression dive plan per input data.",
+        "description": "Returns custom decompression dive plan per input data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/plan_dive_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n            \"dives\" : [\n                {\n                    \"depth\": 40, \n                    \"duration\": 30\n                }, {\n                    \"depth\": 20, \n                    \"duration\": 5\n                }\n            ],\n            \"gases\": {\n                \"bottomMix\" : {\"o2\":0.32,\"he2\":0,\"n2\":0.68,\"diveMod\":33.7,\"decoMod\":40}\n            },\n            \"descentSpeed\": 18,\n            \"ascentSpeed\": 9\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/divelog": {
+      "get": {
+        "tags": [
+          "divelog"
+        ],
+        "summary": "Returns user's logged dives.",
+        "description": "Returns user's logged dives.",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "62c00ae323fb82b6ea0fab10"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "divelog"
+        ],
+        "summary": "Creates divelog for a user.",
+        "description": "Creates divelog for a user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/divelog_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n            \"userId\": \"123456\",\n            \"time\": 1656841158677,\n            \"duration\": 50,\n            \"maxDepth\": 20,\n            \"avgDepth\": 12,\n            \"site\": \"Las Cambras\",\n            \"waterTemp\": 23,\n            \"weather\":\"sunny\",\n            \"cylinders\": [{\n                \"size\": 12,\n                \"startPressure\": 200,\n                \"endPressure\": 65\n            }],\n            \"gasConsumption\": 14.72\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/divelog/{id}": {
+      "get": {
+        "tags": [
+          "divelog"
+        ],
+        "summary": "Returns user's logged dive per log ID.",
+        "description": "Returns user's logged dive per log ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divelog ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "divelog"
+        ],
+        "summary": "Updates user's logged dive per log ID.",
+        "description": "Updates user's logged dive per log ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divelog ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/divelog_id_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n            \"userId\": \"123456\",\n            \"time\": 1656841158677,\n            \"duration\": 50,\n            \"maxDepth\": 20,\n            \"avgDepth\": 12,\n            \"site\": \"Las Cambras\",\n            \"waterTemp\": 23,\n            \"weather\":\"sunny\",\n            \"cylinders\": [{\n                \"size\": 12,\n                \"startPressure\": 200,\n                \"endPressure\": 65\n            }],\n            \"gasConsumption\": 14.72\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "divelog"
+        ],
+        "summary": "Delete user's logged dive per log ID.",
+        "description": "Delete user's logged dive per log ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divelog ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/divesite": {
+      "get": {
+        "tags": [
+          "divesite"
+        ],
+        "summary": "Returns all divesites.",
+        "description": "Returns all divesites.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "divesite"
+        ],
+        "summary": "Create divesite.",
+        "description": "Create divesite.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/divesite_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n         \"name\": \"test site\",\n            \"country\": \"test country\",\n            \"waterBody\": \"wet water\",\n            \"diveType\": \"test dive\"\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/divesite/{id}": {
+      "get": {
+        "tags": [
+          "divesite"
+        ],
+        "summary": "Returns divesites per divesite ID.",
+        "description": "Returns divesites per divesite ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divesite ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "divesite"
+        ],
+        "summary": "Updates divesites per divesite ID.",
+        "description": "Updates divesites per divesite ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divesite ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/divesite_id_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n         \"name\": \"test site 2\",\n            \"country\": \"test country 2\",\n            \"waterBody\": \"new water\",\n            \"diveType\": \"new test dive\"\n        }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+
+      "delete": {
+        "tags": [
+          "divesite"
+        ],
+        "summary": "Deletes divesites per divesite ID.",
+        "description": "Deletes divesites per divesite ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Divesite ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/settings": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Returns user settings.",
+        "description": "Returns user settings.",
+        "responses": {
+          "200": {
+            "description": "Success."
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Updates user settings.",
+        "description": "Updates user settings.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/settings_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n        \"ascentSpeed\": 10,\n        \"descentSpeed\": 20,\n        \"gradFLow\": 0.4,\n        \"gradFHigh\": 0.7,\n        \"tissues\": [\n            {\n                \"halfTime\": 4,\n                \"mValue\": 3.24\n            },\n            {\n                \"halfTime\": 8,\n                \"mValue\": 2.44\n            },\n            {\n                \"halfTime\": 15,\n                \"mValue\": 2.1\n            },\n            {\n                \"halfTime\": 30,\n                \"mValue\": 1.8\n            },\n            {\n                \"halfTime\": 60,\n                \"mValue\": 1.57\n            },\n            {\n                \"halfTime\": 120,\n                \"mValue\": 1.45\n            },\n            {\n                \"halfTime\": 240,\n                \"mValue\": 1.37\n            },\n            {\n                \"halfTime\": 500,\n                \"mValue\": 1.39\n            }\n        ],\n        \"gasMixes\": [\n            {\n                \"o2\": 0.21,\n                \"he2\": 0,\n                \"n2\": 0.79,\n                \"diveMod\": 56.6,\n                \"decoMod\": 66.1,\n                \"_id\": \"62c04086b6e457e2eafb02dd\"\n            }\n        ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success."
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/settings/gasmix": {
+      "post": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Creates new breathing gas mix.",
+        "description": "Creates new breathing gas mix.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/settings_gasmix_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "\n            {\n                \"o2\": 0.28,\n                \"he2\": 0\n            }\n "
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    },
+    "/settings/gasmix/{o2}": {
+      "delete": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Returns user settings.",
+        "description": "Returns user settings.",
+        "parameters": [
+          {
+            "name": "o2",
+            "in": "path",
+            "description": "Gasmix O2 content.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "0.21"
+          },
+          {
+            "name": "he2",
+            "in": "query",
+            "description": "Gasmix He2 content.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "0.17"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success."
+          }
+        },
+        "servers": [
+          {
+            "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://max-vis-app-umuud.ondigitalocean.app/api"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "plantable_gas": {
+        "type": "object",
+        "properties": {
+          "o2": {
+            "type": "number"
+          },
+          "he2": {
+            "type": "integer"
+          },
+          "n2": {
+            "type": "number"
+          },
+          "diveMod": {
+            "type": "number"
+          },
+          "decoMod": {
+            "type": "integer"
+          }
+        },
+        "example": null
+      },
+      "divelog_id_body": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer"
+          },
+          "maxDepth": {
+            "type": "integer"
+          },
+          "site": {
+            "type": "string"
+          },
+          "avgDepth": {
+            "type": "integer"
+          },
+          "waterTemp": {
+            "type": "integer"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "gasConsumption": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "cylinders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/divelog_cylinders"
+            }
+          }
+        }
+      },
+      "plandive_dives": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer"
+          },
+          "depth": {
+            "type": "integer"
+          }
+        },
+        "example": null
+      },
+      "settings_tissues": {
+        "type": "object",
+        "properties": {
+          "halfTime": {
+            "type": "integer"
+          },
+          "mValue": {
+            "type": "number"
+          }
+        },
+        "example": null
+      },
+      "plan_dive_body": {
+        "type": "object",
+        "properties": {
+          "ascentSpeed": {
+            "type": "integer"
+          },
+          "dives": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/plandive_dives"
+            }
+          },
+          "descentSpeed": {
+            "type": "integer"
+          },
+          "gases": {
+            "$ref": "#/components/schemas/plandive_gases"
+          }
+        }
+      },
+      "settings_body": {
+        "type": "object",
+        "properties": {
+          "gasMixes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/settings_gasMixes"
+            }
+          },
+          "tissues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/settings_tissues"
+            }
+          },
+          "ascentSpeed": {
+            "type": "integer"
+          },
+          "gradFHigh": {
+            "type": "number"
+          },
+          "gradFLow": {
+            "type": "number"
+          },
+          "descentSpeed": {
+            "type": "integer"
+          }
+        }
+      },
+      "settings_gasMixes": {
+        "type": "object",
+        "properties": {
+          "o2": {
+            "type": "number"
+          },
+          "he2": {
+            "type": "integer"
+          },
+          "n2": {
+            "type": "number"
+          },
+          "diveMod": {
+            "type": "number"
+          },
+          "decoMod": {
+            "type": "number"
+          },
+          "_id": {
+            "type": "string"
+          }
+        },
+        "example": null
+      },
+      "user_login_body": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          }
+        }
+      },
+      "divesite_id_body": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "diveType": {
+            "type": "string"
+          },
+          "waterBody": {
+            "type": "string"
+          }
+        }
+      },
+      "settings_gasmix_body": {
+        "type": "object",
+        "properties": {
+          "o2": {
+            "type": "number"
+          },
+          "he2": {
+            "type": "integer"
+          }
+        }
+      },
+      "divelog_cylinders": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer"
+          },
+          "startPressure": {
+            "type": "integer"
+          },
+          "endPressure": {
+            "type": "integer"
+          }
+        },
+        "example": null
+      },
+      "divelog_body": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer"
+          },
+          "maxDepth": {
+            "type": "integer"
+          },
+          "site": {
+            "type": "string"
+          },
+          "avgDepth": {
+            "type": "integer"
+          },
+          "waterTemp": {
+            "type": "integer"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "gasConsumption": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "cylinders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/divelog_cylinders"
+            }
+          }
+        }
+      },
+      "divesite_body": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "diveType": {
+            "type": "string"
+          },
+          "waterBody": {
+            "type": "string"
+          }
+        }
+      },
+      "user_create_body": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "plan_table_body": {
+        "type": "object",
+        "properties": {
+          "maxDepth": {
+            "type": "integer"
+          },
+          "gas": {
+            "$ref": "#/components/schemas/plantable_gas"
+          },
+          "gradientFactor": {
+            "type": "integer"
+          },
+          "steps": {
+            "type": "integer"
+          }
+        }
+      },
+      "plandive_gases": {
+        "type": "object",
+        "properties": {
+          "bottomMix": {
+            "$ref": "#/components/schemas/plantable_gas"
+          }
+        },
+        "example": null
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
