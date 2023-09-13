@@ -1,4 +1,4 @@
-const tissueSettings = [
+const TissueSettings = [
     {
         halfTime: 4,
         mValue: 3.24
@@ -33,4 +33,4 @@ const tissueSettings = [
     }
 ];
 
-module.exports = tissueSettings
+module.exports = TissueSettings
