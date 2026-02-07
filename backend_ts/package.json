@@ -1,0 +1,22 @@
+{
+  "name": "max-vis-server",
+  "version": "2.0.0",
+  "description": "## Exam Project",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mausp7/max-vis-dive-app.git"
+  },
+  "author": "Aron Tombacz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mausp7/max-vis-dive-app/issues"
+  },
+  "homepage": "https://github.com/Mausp7/max-vis-dive-app#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
