@@ -9,30 +9,6 @@ class Dive {
         this._planner = new Planner();
     }
 
-    simulateDive (dives, gases = {bottomMix : new GasMix(0.21)}, descentSpeed = 18, ascentSpeed = 9, gasConsumption = {dive: 20, deco: 16}, gradFLow = 1, gradFHigh = 1){
-        let startDepth = 0;
-
-        for (const dive of dives) {
-            const ambientPressure = getPressure(dive.depth);
-            const {depthChangeDuration, depthChangePressure} = getDepthChange(startDepth, dive.depth, descentSpeed, ascentSpeed);
-            startDepth = dive.depth
-
-            this._model.saturateTissues(depthChangePressure, depthChangeDuration, gases.bottomMix.n2);
-            this._model.saturateTissues(ambientPressure, dive.duration - depthChangeDuration, gases.bottomMix.n2)
-
-            dive.gas = gases.bottomMix;
-
-            dive.gasConsumption = getGasConsumption(depthChangePressure, depthChangeDuration, ambientPressure, dive.duration, gasConsumption.dive);
-
-            if (dive.depth > gases.bottomMix.diveMod) {
-                dive.alert = {mod: gases.bottomMix.diveMod}
-            }
-
-            dive.ceiling = this._model.ceiling;
-        }
-
-        return dives;
-    }
 
     dive(dives, gases = {bottomMix : new GasMix(0.21)}, descentSpeed = 18, ascentSpeed = 9, gasConsumption = {dive: 20, deco: 16}, gradFLow = 0.4, gradFHigh = 0.75) {
         this._model.reset();
@@ -44,9 +20,7 @@ class Dive {
         }
     }
 
-    noDecompressionDive(maxDepth = 40, steps = 3, gasMix = new GasMix(0.21), gradientFactor = 1) {
-        return this._planner.createDiveTable(this._model, maxDepth, steps, gasMix, gradientFactor);
-    }
+
 }
 
 module.exports = Dive;

@@ -1,6 +1,6 @@
 import { GasMix } from "./GasMix";
 
-export type TissueLoad = Record<"N2" | "He2", number>;
+export type TissueLoad = Partial<Record<"N2" | "He2", number>>;
 
 export class Tissue {
 	private _halfTime: number;
@@ -13,7 +13,7 @@ export class Tissue {
 		this._halfTime = halfTime;
 		this._mValue = mValue;
 		this._gasMix = gasMix;
-		this._tissueLoad.N2 = startPressure * gasMix.fN2;
+		this._tissueLoad = {"N2": startPressure * gasMix.fN2};
 	};
 	
 	public get mValue():number {
